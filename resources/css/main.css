@@ -1,0 +1,94 @@
+/* For everything except the header */
+.body{
+    margin-left: 130px;
+    margin-right: 130px;
+}
+
+/* Form for the new comment */
+.form_comment{
+    background-color: #D9DDDE;
+    border-radius: 25px;
+    padding: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.form_comment h1 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+/* label "comment" in form*/
+.new_comment_comment{
+    width: 70%;
+}
+
+/* View the comment */
+.comment{
+    background-color: #D9DDDE;
+    border-radius: 25px;
+    margin-top: 15px;
+    padding: 20px;
+}
+/* Part of the comment - parent comment  */
+    .response{
+    background-color: #C7CED1;
+    padding: 15px;
+    border-radius: 25px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    }
+    .response p{
+    margin-left: -10px;
+    }
+    .quote_comment{
+        font-style: italic;
+        margin-left: 5px;
+    }
+    .quote_comment::before{
+    content: '«';
+    }
+    .quote_comment::after{
+    content: '»';
+    }
+.author_comment{
+    font-weight: bold;
+}
+.name_comment{
+    font-size: 18px;
+    margin-left: 30px;
+}
+/* Part of the comment - button's container */
+.button_comment {
+    margin-top: 20px;
+    display: flex;
+}
+.button_comment button{
+    margin-right: 10px;
+    padding: 7px;
+    border-radius: 9px;
+    color: white;
+}
+.answer_btn{
+    background-color: blue !important;
+}
+.delete_btn{
+    background-color: red !important;
+}
+.send_btn{
+    padding: 6px;
+    border-radius: 9px;
+    color: white;
+    background-color: blue !important;
+}
+/*  Part of the comment - form for answer */
+.form_answer{
+    margin-top: 15px;
+}
+
+/* Button for load all comments */
+#load_more_button{
+    font-size: 70px;
+    display: block;
+    margin: 0 auto;
+}
