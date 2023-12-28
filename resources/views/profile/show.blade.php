@@ -5,7 +5,7 @@
             {{ __($user->email) }}
         </h2>
     </x-slot>
-    
+
     <div class = "body">
 
         @if (auth()->id() != Null)
@@ -26,6 +26,9 @@
         <!-- Comment's container -->
         <div id = "comments_container">
             <!-- Comment -->
+            @php
+                $comments =  \App\Http\Controllers\CommentController::show($user->id);
+            @endphp
             @include('profile.partials.all-comments-for-show')
         </div>
 
@@ -33,7 +36,7 @@
         @php
             $comment_count =  \App\Http\Controllers\CommentController::showCount($user->id);
         @endphp
-        
+
         <!-- Button for more comments -->
         @if ($comment_count>5)
             <button id="load_more_button">↓</button>

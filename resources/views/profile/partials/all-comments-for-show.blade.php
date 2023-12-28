@@ -13,7 +13,7 @@
                 @if ($parent_comment)
                     <div class = "author_comment">
                         <a href = "{{route('profile.show', $parent_comment->id_from)}}">
-                            {{$parent_comment->email}}
+                            {{$parent_comment->userAuthor->email}}
                         </a>
                     </div>
                     <div class = "quote_comment">
@@ -27,7 +27,7 @@
 
         <div class = "author_comment">
             <a href = "{{route('profile.show', $comment->id_from)}}">
-                {{$comment->email}}
+                {{$comment->userAuthor->email}}
             </a>
         </div>
         <div class = "name_comment">

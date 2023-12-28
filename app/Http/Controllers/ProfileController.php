@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use App\Models\User;
-use App\Http\Controllers\CommentController;
 
 class ProfileController extends Controller
 {
@@ -17,25 +16,24 @@ class ProfileController extends Controller
     /**
      * Display the list of user.
      */
-    public static function index(){
+    public static function index()
+    {
 
         $users = User::all();
-        
+
         return view("profile.index", compact("users"));
     }
 
     /**
      * Display the comments about user.
      */
-    public function show($id){
+    public function show($id)
+    {
 
         $user = User::findOrFail($id);
 
-        // Comments from CommnetController
-        $comments = CommentController::show($id);
-
-        return view("profile.show", compact("user", "comments"));
-    } 
+        return view("profile.show", compact("user"));
+    }
 
     /**
      * Display the user's profile form.

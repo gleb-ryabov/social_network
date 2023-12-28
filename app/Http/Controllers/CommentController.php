@@ -17,13 +17,11 @@ class CommentController extends Controller
     /**
      * Display 5 user's comments.
      */
-    public static function show($id){
-        $comments = [];
-        $comments = DB::table('comments')
-            ->join('users', 'comments.id_from', '=', 'users.id')
-            ->select('comments.*', 'users.email')
-            ->where("id_to",$id)
+    public static function show($id)
+    {
+        $comments = Comment::where("id_to", $id)
             ->where("deleted_at", Null)
+            ->with('userAuthor')
             ->orderBy('comments.id', 'desc')
             ->limit(5)
             ->get();
@@ -33,13 +31,11 @@ class CommentController extends Controller
     /**
      * Display all comments.
      */
-    public static function showAll($id){
-        $comments = [];
-        $comments = DB::table('comments')
-            ->join('users', 'comments.id_from', '=', 'users.id')
-            ->select('comments.*', 'users.email')
-            ->where("id_to",$id)
+    public static function showAll($id)
+    {
+        $comments = Comment::where("id_to", $id)
             ->where("deleted_at", Null)
+            ->with('userAuthor')
             ->orderBy('comments.id', 'desc')
             ->get();
         return view("profile.partials.all-comments-for-show", compact("comments"));
@@ -48,15 +44,12 @@ class CommentController extends Controller
     /**
      * Display one comment.
      */
-    public static function showComment($id){
-        $comment = [];
-        $comment = DB::table('comments')
-            ->join('users', 'comments.id_from', '=', 'users.id')
-            ->select('comments.*', 'users.email')
-            ->where("comments.id",$id)
+    public static function showComment($id)
+    {
+        $comment = Comment::where("comments.id", $id)
             ->where("deleted_at", Null)
+            ->with('userAuthor')
             ->orderBy('comments.id', 'desc')
-            ->limit(5)
             ->first();
         return $comment;
     }
@@ -64,20 +57,22 @@ class CommentController extends Controller
     /**
      * Count of user's comments
      */
-    public static function showCount($id){
+    public static function showCount($id)
+    {
         $comments_count = Comment::where('id_to', $id)
-        ->where('deleted_at', null)
-        ->count();
+            ->where('deleted_at', null)
+            ->count();
         return $comments_count;
     }
 
     /**
      * Create comment.
      */
-    public function create(){
+    public function create()
+    {
         $id_from = auth()->id();
         $data = request()->validate([
-            'id_parent'=> 'integer',
+            'id_parent' => 'integer',
             'id_to' => 'integer',
             'name' => 'string',
             'comment' => 'string',
@@ -86,12 +81,13 @@ class CommentController extends Controller
         Comment::create($data);
         return Redirect::route('profile.show', $data['id_to']);
     }
-    
+
     /**
      * Delete comment.
      */
-    public function destroy (Comment $comment){
-        $id_account =  $comment->id_to;
+    public function destroy(Comment $comment)
+    {
+        $id_account = $comment->id_to;
         $comment->delete();
         return Redirect::route('profile.show', $id_account);
     }
