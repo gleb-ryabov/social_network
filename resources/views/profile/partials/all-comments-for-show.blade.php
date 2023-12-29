@@ -7,17 +7,14 @@
         @if ($comment->id_parent != 0)
             <div class = "response">
                 <p>Ответ на комментарий:</p>
-                @php
-                    $parent_comment =  \App\Http\Controllers\CommentController::showComment($comment->id_parent);
-                @endphp
-                @if ($parent_comment)
+                @if ($comment->parent_delete == Null)
                     <div class = "author_comment">
-                        <a href = "{{route('profile.show', $parent_comment->id_from)}}">
-                            {{$parent_comment->userAuthor->email}}
+                        <a href = "{{route('profile.show', $comment->parent_author)}}">
+                            {{$comment->parent_email}}
                         </a>
                     </div>
                     <div class = "quote_comment">
-                        {{$parent_comment->comment}}
+                        {{$comment->parent_comment}}
                     </div>
                 @else
                     Комментарий удален
@@ -25,9 +22,10 @@
             </div>
         @endif
 
+        <!-- Main part of comment -->
         <div class = "author_comment">
             <a href = "{{route('profile.show', $comment->id_from)}}">
-                {{$comment->userAuthor->email}}
+                {{$comment->email}}
             </a>
         </div>
         <div class = "name_comment">

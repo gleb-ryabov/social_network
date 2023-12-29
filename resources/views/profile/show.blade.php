@@ -26,19 +26,11 @@
         <!-- Comment's container -->
         <div id = "comments_container">
             <!-- Comment -->
-            @php
-                $comments =  \App\Http\Controllers\CommentController::show($user->id);
-            @endphp
             @include('profile.partials.all-comments-for-show')
         </div>
 
-        <!-- Count of comments -->
-        @php
-            $comment_count =  \App\Http\Controllers\CommentController::showCount($user->id);
-        @endphp
-
         <!-- Button for more comments -->
-        @if ($comment_count>5)
+        @if ($comments_count>5)
             <button id="load_more_button">↓</button>
         @endif
 

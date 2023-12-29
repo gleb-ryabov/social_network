@@ -32,7 +32,23 @@ class ProfileController extends Controller
 
         $user = User::findOrFail($id);
 
-        return view("profile.show", compact("user"));
+        // Comments about user
+        $comments = User::select('users.*', 'comments.*', 'parent_comment.comment as parent_comment',
+            'parent_comment.id_from as parent_author', 'parent_comment.deleted_at as parent_delete',
+            'parent_user.email as parent_email')
+            ->leftJoin('comments', 'comments.id_from', '=', 'users.id')
+            ->leftJoin('comments as parent_comment', 'parent_comment.id', '=', 'comments.id_parent')
+            ->leftJoin('users as parent_user', 'parent_user.id', '=', 'parent_comment.id_from')
+            ->where('comments.id_to', $id)
+            ->where('comments.deleted_at', null)
+            ->orderBy('comments.id', 'desc')
+            ->get();
+        // Count of comments about user
+        $comments_count = $comments->count();
+        // Slicing up to 5 comments
+        $comments = $comments->take(5)->all();
+
+        return view("profile.show", compact("user", "comments", "comments_count"));
     }
 
     /**

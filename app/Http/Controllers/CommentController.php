@@ -2,40 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
-use App\Models\Comment;
 
 class CommentController extends Controller
 {
-
-    /**
-     * Display 5 user's comments.
-     */
-    public static function show($id)
-    {
-        $comments = Comment::where("id_to", $id)
-            ->where("deleted_at", Null)
-            ->with('userAuthor')
-            ->orderBy('comments.id', 'desc')
-            ->limit(5)
-            ->get();
-        return $comments;
-    }
 
     /**
      * Display all comments.
      */
     public static function showAll($id)
     {
-        $comments = Comment::where("id_to", $id)
-            ->where("deleted_at", Null)
-            ->with('userAuthor')
+        $comments = Comment::select('users.*', 'comments.*', 'parent_comment.comment as parent_comment',
+            'parent_comment.id_from as parent_author', 'parent_comment.deleted_at as parent_delete',
+            'parent_user.email as parent_email')
+            ->leftJoin('users', 'comments.id_from', '=', 'users.id')
+            ->leftJoin('comments as parent_comment', 'parent_comment.id', '=', 'comments.id_parent')
+            ->leftJoin('users as parent_user', 'parent_user.id', '=', 'parent_comment.id_from')
+            ->where('comments.id_to', $id)
+            ->where('comments.deleted_at', null)
             ->orderBy('comments.id', 'desc')
             ->get();
         return view("profile.partials.all-comments-for-show", compact("comments"));
@@ -47,22 +35,11 @@ class CommentController extends Controller
     public static function showComment($id)
     {
         $comment = Comment::where("comments.id", $id)
-            ->where("deleted_at", Null)
+            ->where("deleted_at", null)
             ->with('userAuthor')
             ->orderBy('comments.id', 'desc')
             ->first();
         return $comment;
-    }
-
-    /**
-     * Count of user's comments
-     */
-    public static function showCount($id)
-    {
-        $comments_count = Comment::where('id_to', $id)
-            ->where('deleted_at', null)
-            ->count();
-        return $comments_count;
     }
 
     /**
