@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Services\CommentServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -11,21 +12,19 @@ use Illuminate\View\View;
 class CommentController extends Controller
 {
 
-    /**
-     * Display all comments.
-     */
-    public static function showAll($id)
+    // Services Layer for showAll
+    protected $commentServices;
+    public function __construct(CommentServices $commentServices)
     {
-        $comments = Comment::select('users.*', 'comments.*', 'parent_comment.comment as parent_comment',
-            'parent_comment.id_from as parent_author', 'parent_comment.deleted_at as parent_delete',
-            'parent_user.email as parent_email')
-            ->leftJoin('users', 'comments.id_from', '=', 'users.id')
-            ->leftJoin('comments as parent_comment', 'parent_comment.id', '=', 'comments.id_parent')
-            ->leftJoin('users as parent_user', 'parent_user.id', '=', 'parent_comment.id_from')
-            ->where('comments.id_to', $id)
-            ->where('comments.deleted_at', null)
-            ->orderBy('comments.id', 'desc')
-            ->get();
+        $this->commentServices = $commentServices;
+    }
+
+    /**
+     * Display all comments
+     */
+    public function showAll($id)
+    {
+        $comments = $this->commentServices->getCommentsForUser($id);
         return view("profile.partials.all-comments-for-show", compact("comments"));
     }
 
